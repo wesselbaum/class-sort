@@ -1,0 +1,25 @@
+{
+  "name": "class-sort",
+  "version": "0.1.0",
+  "description": "Sorts the class attirbute in a html file",
+  "main": "./src/sorter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wesselbaum/class-sort.git"
+  },
+  "author": "Aleksej Wesselbaum",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wesselbaum/class-sort/issues"
+  },
+  "homepage": "https://github.com/wesselbaum/class-sort#readme",
+  "bin": {
+    "class-sort": "./src/cli.js"
+  },
+  "dependencies": {
+    "yargs": "^12.0.2"
+  }
+}
