@@ -1,7 +1,7 @@
 'use strict';
 
 //internal
-const Errors = require("./errors");
+//const Errors = require("./errors");
 
 //External
 const fs = require('fs');
@@ -21,8 +21,7 @@ class Sorter {
    * @param match String which containes class="..."
    * @returns {string} sorted class
    */
-  static sort(match) {
-    // TODO make it work propperly for multi line
+  sort(match) {
     let classesString = match.replace('class=', '');
     const quotes = classesString[0];
     const regex = new RegExp(quotes, 'g');
@@ -78,7 +77,7 @@ class Sorter {
           for (let i = 0; i < allFilePathsInDirectory.length; i++) {
             let fileInDirectory = allFilePathsInDirectory[i];
 
-            if (this.isFileInConfigFileTypes(fileInDirectory)) {
+            if (Sorter.isFileInConfigFileTypes(fileInDirectory)) {
               filePathsToProcess.push(fileInDirectory);
             }
 
@@ -116,36 +115,37 @@ class Sorter {
   processFile(filePath) {
     //let fileContent = fs.readFileSync(filePath, 'utf8');
 
-    this.getFileContentPromise(filePath).then(function () {
+    const self = this;
+    /*this.getFileContentPromise(filePath).then(function (fileContent) {
       // TODO Make RegEx working with double and single quotes.
       const regexFindAllClass = /class="(.|\n)*?"/g;
-      let match = fileContent.replace(regexFindAllClass, this.sort);
+      let match = fileContent+''.replace(regexFindAllClass, self.sort);
 
       fs.writeFileSync(filePath + "_sorted.html", match, "utf8");
 
-    });
+    });*/
+
+    let content;
+    fs.readFile(filePath, 'utf8', function (err, data) {
+      if (err) {
+        throw err;
+      } else {
+        content = data;
+        self.processContent(data, filePath);
+      }
+    })
 
   }
 
-  /**
-   * Makes a Promise from readFile
-   * @param filePath Path to the file to be read
-   * @returns {Promise<any>} Promise from fs.readFile
-   */
-  getFileContentPromise(filePath) {
-    const fileContentPromise = new Promise(function (resolve, reject) {
-      fs.readFile(filePath, 'utf', function (err, data) {
-        if (err) {
-          Errors.errorHandler(Errors.readingFileFailed(filePath, err));
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-    return fileContentPromise;
-  }
+  processContent(fileContent, filePath) {
 
+    // TODO Make RegEx working with double and single quotes.
+    const regexFindAllClass = /class="(.|\n)*?"/g;
+    let match = fileContent.replace(regexFindAllClass, this.sort);
+
+    fs.writeFileSync(filePath + "_sorted.html", match, "utf8");
+
+  }
 
   /**
    * Walks over the files in directory and gets all files recursively
