@@ -1,5 +1,6 @@
 class-sort
 =========
+[![Build Status](https://travis-ci.com/wesselbaum/class-sort.svg?branch=master)](https://travis-ci.com/wesselbaum/class-sort)
 
 This project is meant to sort class attributes in a html file for better readability.
  
