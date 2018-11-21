@@ -1,14 +1,78 @@
 'use strict';
 
 //internal
-//const Errors = require("./errors");
+const Errors = require("./errors");
 
 //External
 const fs = require('fs');
 const path = require('path');
+const findUp = require('find-up');
+const jsonTryParse = require('json-try-parse');
 
 class Sorter {
 
+  constructor() {
+    this.config = {};
+    this.readConfig();
+  }
+
+  /**
+   * Reads config.
+   * Checks if the default config could be read.
+   * Checks if the custom config could be read.
+   * If both could be read merges them to a single object and passes it to the process function.
+   * If there is no custom config only the default config will be processed.
+   */
+  readConfig() {
+    // Add parameter for passing own config path
+
+    const defaultConfigRelativePath = '../config/class-sort.json';
+    const defaultConfigPath = path.resolve(__dirname, defaultConfigRelativePath);
+    const defaultConfigContent = fs.readFileSync(defaultConfigPath, 'utf8');
+    const defaultConfig = jsonTryParse(defaultConfigContent);
+    const dcDefined = defaultConfig !== undefined;
+    if (!dcDefined) {
+      Errors.errorHandler(Errors.failedReadingDefaultSettings(), 1)
+    }
+
+    let customConfigPath = findUp.sync('class-sort.json');
+    if (!customConfigPath) {
+      this.processConfig(defaultConfig)
+    } else {
+      let customConfigContent = null;
+      try {
+        customConfigContent = fs.readFileSync(customConfigPath, 'utf8');
+      } catch (e) {
+        console.log(e);
+        this.processConfig(defaultConfig);
+        return;
+      }
+      if (typeof customConfigContent === 'string' && customConfigContent) {
+        const customConfig = jsonTryParse(customConfigContent);
+        const ccDefined = customConfig !== undefined;
+
+        if (ccDefined && dcDefined) {
+          const mergedConfig = Object.assign(defaultConfig, customConfig);
+          this.processConfig(mergedConfig);
+        } else {
+          this.processConfig(defaultConfig)
+        }
+      } else if (!dcDefined) {
+        Errors.errorHandler(Errors.norDefaultOrCustomConfigCouldBeRead(), 1);
+      }
+    }
+  }
+
+  /**
+   * Assigns properties from the configObject to this.config
+   * @param configObject Object with defined attributes
+   */
+  processConfig(configObject) {
+    this.config = {};
+    this.config.exclude = configObject.exclude;
+    this.config.fileTypes = configObject['file-types'];
+    this.config.sortOrder = configObject['sort-order'];
+  }
 
   /**
    * Sorts a class tag.
@@ -22,16 +86,16 @@ class Sorter {
    * @returns {string} sorted class
    */
   sort(unsortedString) {
+    const doubleSpaces = /\s\s+/g;
     let classesString = unsortedString.replace('class=', '');
-    /*const r = /[  |\s]/g;
-    let a = (classesString.replace(r, '~'));*/
+    classesString = (classesString.replace(doubleSpaces, ' '));
     const quotes = classesString[0];
     const regex = new RegExp(quotes, 'g');
     classesString = classesString.replace(regex, '');
     let classesArray = classesString.split(' ');
     classesArray = classesArray.sort();
 
-    const sortedClasses = classesArray.join(' ');
+    const sortedClasses = classesArray.join(' ').trim();
 
     return "class=" + quotes + sortedClasses + quotes;
   }
@@ -41,18 +105,8 @@ class Sorter {
    * @param file
    * @returns {boolean}
    */
-  static isFileInConfigFileTypes(file) {
-    // TODO Make this array read from config file
-    const fileTypes = [
-      ".html",
-      ".vm"
-    ];
-
-    return (fileTypes.indexOf(path.extname(file)) > -1);
-  }
-
-  constructor() {
-
+  isFileInConfigFileTypes(file) {
+    return (this.config.fileTypes.indexOf(path.extname(file)) > -1);
   }
 
   /**
@@ -79,7 +133,7 @@ class Sorter {
           for (let i = 0; i < allFilePathsInDirectory.length; i++) {
             let fileInDirectory = allFilePathsInDirectory[i];
 
-            if (Sorter.isFileInConfigFileTypes(fileInDirectory)) {
+            if (this.isFileInConfigFileTypes(fileInDirectory)) {
               filePathsToProcess.push(fileInDirectory);
             }
 
@@ -91,7 +145,7 @@ class Sorter {
 
 
       } else {
-        //TODO kein Ordner oder Datei
+        Errors.errorHandler(Errors.noFileOrDirectory(argument), 1);
       }
     } else {
       console.log("Unable to process " + argument);
@@ -115,38 +169,42 @@ class Sorter {
    * @param filePath
    */
   processFile(filePath) {
-    //let fileContent = fs.readFileSync(filePath, 'utf8');
 
     const self = this;
-    /*this.getFileContentPromise(filePath).then(function (fileContent) {
-      // TODO Make RegEx working with double and single quotes.
-      const regexFindAllClass = /class="(.|\n)*?"/g;
-      let match = fileContent+''.replace(regexFindAllClass, self.sort);
 
-      fs.writeFileSync(filePath + "_sorted.html", match, "utf8");
-
-    });*/
-
-    let content;
     fs.readFile(filePath, 'utf8', function (err, data) {
       if (err) {
         throw err;
       } else {
-        content = data;
         self.processContent(data, filePath);
       }
     })
 
   }
 
-  processContent(fileContent, filePath) {
+  /**
+   * Searches the class attribute and replaces it with it's sorted version.
+   * Then a file will be written, or if isTestCase is true the value will be returned
+   * @param fileContent Content which contains class attributes
+   * @param filePath Path to the file which gets processed. Is used to write the new file
+   * @param isTestCase If set no file will be written but the content will be returned
+   * @returns {String|void} Nothing | Content of the file
+   */
+  processContent(fileContent, filePath, isTestCase = false) {
 
-    // TODO Make RegEx working with double and single quotes.
-    const regexFindAllClass = /class="(.|\n)*?"/g;
-    let match = fileContent.replace(regexFindAllClass, this.sort);
+    const regexFindAllClass = /class=["|'](.|\n)*?["|']/g;
 
-    fs.writeFileSync(filePath + "_sorted.html", match, "utf8");
+    let sortedContent = fileContent.replace(regexFindAllClass, this.sort);
 
+    if (isTestCase) {
+      return sortedContent;
+    } else {
+      fs.writeFile(filePath + "_sorted.html", sortedContent, "utf8", function (err) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
   }
 
   /**
