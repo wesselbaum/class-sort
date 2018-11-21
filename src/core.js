@@ -18,11 +18,13 @@ class Sorter {
    * Makes the string to an array separated by spaces.
    * Sorts the class array.
    * Joins the sorted array and reconstructs the class tag.
-   * @param match String which containes class="..."
+   * @param unsortedString String which contains class="..."
    * @returns {string} sorted class
    */
-  sort(match) {
-    let classesString = match.replace('class=', '');
+  sort(unsortedString) {
+    let classesString = unsortedString.replace('class=', '');
+    /*const r = /[  |\s]/g;
+    let a = (classesString.replace(r, '~'));*/
     const quotes = classesString[0];
     const regex = new RegExp(quotes, 'g');
     classesString = classesString.replace(regex, '');
