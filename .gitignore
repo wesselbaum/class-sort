@@ -178,12 +178,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/node,linux,windows,intellij
-Würde .idea/checkstyle-idea.xml löschen
-Würde .idea/class-sort.iml löschen
-Würde .idea/compiler.xml löschen
-Würde .idea/inspectionProfiles/ löschen
-Würde .idea/jsLibraryMappings.xml löschen
-Würde .idea/misc.xml löschen
-Würde .idea/modules.xml löschen
-Würde cli.js löschen
-Würde package.json löschen
+
+*_sorted.html
