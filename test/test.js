@@ -1,6 +1,7 @@
 'use strict';
 
 const expect = require('chai').expect;
+const path = require('path');
 
 const Sorter = require('../src/sorter');
 const testLines = require('../test-data/testline');
@@ -52,12 +53,14 @@ describe('ProcessArgument', function() {
   const sorter = new Sorter();
 
   it('Reading a directory', function () {
-    const result = sorter.processArgument('/space/frontend/node_modules/class-sort/test-data/three_files', true);
+    const testPath = path.join(__dirname, '../test-data/three_files');
+    const result = sorter.processArgument(testPath, true);
     expect(result.length).to.equal(3)
   });
 
   it('Reading a single file', function () {
-    const result = sorter.processArgument('/space/frontend/node_modules/class-sort/test-data/test.html', true);
+    const testPath = path.join(__dirname, '../test-data/test.html');
+    const result = sorter.processArgument(testPath, true);
     expect(result.length).to.equal(1)
   });
 });
