@@ -234,6 +234,14 @@ class Sorter {
   }
 
 
+  getVersion() {
+    const package_json_path = path.join(__dirname, './../package.json');
+    const package_json_content = fs.readFileSync(package_json_path, 'utf8');
+    const package_json_object = JSON.parse(package_json_content);
+    return package_json_object["version"];
+
+  }
+
 }
 
 module.exports = Sorter;

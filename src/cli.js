@@ -8,13 +8,23 @@ const Errors = require("./errors");
 //External
 const argv = require('yargs').argv;
 
-let sorter = new Sorter();
+const argumentsRequired = true;
+const sorter = new Sorter();
+
+if (argv["v"] || argv["version"]) {
+  console.log(Sorter.getVersion());
+  this.argumentsRequired = false;
+}
+
+// Add quiet
+
+// Add test
 
 //Process arguments
-if(argv._ && argv._.length > 0){
+if (argv._ && argv._.length > 0) {
   argv._.forEach(function (argument) {
     sorter.processArgument(argument)
   })
-}else{
+} else if (this.argumentsRequired) {
   Errors.errorHandler(Errors.missingAgrumentError(), 1);
 }
