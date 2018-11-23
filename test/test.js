@@ -1,6 +1,7 @@
 'use strict';
 
 const expect = require('chai').expect;
+const path = require('path');
 
 const Sorter = require('../src/sorter');
 const testLines = require('../test-data/testline');
@@ -45,5 +46,21 @@ describe('ProcessContent', function() {
   it('Convert single line single quotes class', function() {
     const result = sorter.processContent(testLines['single-line-single-quotes'], '', true);
     expect(result).to.equal(testLines['single-line-single-quotes-result']);
+  });
+});
+
+describe('ProcessArgument', function() {
+  const sorter = new Sorter();
+
+  it('Reading a directory', function () {
+    const testPath = path.join(__dirname, '../test-data/three_files');
+    const result = sorter.processArgument(testPath, true);
+    expect(result.length).to.equal(3)
+  });
+
+  it('Reading a single file', function () {
+    const testPath = path.join(__dirname, '../test-data/test.html');
+    const result = sorter.processArgument(testPath, true);
+    expect(result.length).to.equal(1)
   });
 });

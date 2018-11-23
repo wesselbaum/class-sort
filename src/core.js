@@ -116,14 +116,16 @@ class Sorter {
    * Puts all the directory and subdirectory files or the argument path in an array.
    * Forwards the file path(s) for further processing.
    * @param argument Path to a file or directory.
+   * @param isTestCase If set there will be no further working
+   * @returns {Array}
    */
-  processArgument(argument) {
+  processArgument(argument, isTestCase = false) {
     if (typeof argument === "string") {
       if (fs.existsSync(argument)) {
         let allFilePathsInDirectory;
         let filePathsToProcess = [];
 
-        if (fs.statSync(argument).isDirectory) {
+        if (fs.statSync(argument).isDirectory()) {
           allFilePathsInDirectory = this.walkSync(argument);
         } else {
           allFilePathsInDirectory = [argument];
@@ -139,7 +141,11 @@ class Sorter {
 
           }
 
-          this.processFiles(filePathsToProcess);
+          if (!isTestCase) {
+            this.processFiles(filePathsToProcess);
+          } else {
+            return filePathsToProcess;
+          }
 
         }
 
