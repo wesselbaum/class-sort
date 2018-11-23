@@ -116,6 +116,8 @@ class Sorter {
    * Puts all the directory and subdirectory files or the argument path in an array.
    * Forwards the file path(s) for further processing.
    * @param argument Path to a file or directory.
+   * @param isTestCase If set there will be no further working
+   * @returns {Array}
    */
   processArgument(argument, isTestCase = false) {
     if (typeof argument === "string") {
