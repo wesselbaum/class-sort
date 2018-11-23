@@ -47,3 +47,17 @@ describe('ProcessContent', function() {
     expect(result).to.equal(testLines['single-line-single-quotes-result']);
   });
 });
+
+describe('ProcessArgument', function() {
+  const sorter = new Sorter();
+
+  it('Reading a directory', function () {
+    const result = sorter.processArgument('/space/frontend/node_modules/class-sort/test-data/three_files', true);
+    expect(result.length).to.equal(3)
+  });
+
+  it('Reading a single file', function () {
+    const result = sorter.processArgument('/space/frontend/node_modules/class-sort/test-data/test.html', true);
+    expect(result.length).to.equal(1)
+  });
+});

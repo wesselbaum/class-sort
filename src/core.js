@@ -117,7 +117,7 @@ class Sorter {
    * Forwards the file path(s) for further processing.
    * @param argument Path to a file or directory.
    */
-  processArgument(argument) {
+  processArgument(argument, isTestCase = false) {
     if (typeof argument === "string") {
       if (fs.existsSync(argument)) {
         let allFilePathsInDirectory;
@@ -139,7 +139,11 @@ class Sorter {
 
           }
 
-          this.processFiles(filePathsToProcess);
+          if (!isTestCase) {
+            this.processFiles(filePathsToProcess);
+          } else {
+            return filePathsToProcess;
+          }
 
         }
 
