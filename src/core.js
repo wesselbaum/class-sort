@@ -123,7 +123,7 @@ class Sorter {
         let allFilePathsInDirectory;
         let filePathsToProcess = [];
 
-        if (fs.statSync(argument).isDirectory) {
+        if (fs.statSync(argument).isDirectory()) {
           allFilePathsInDirectory = this.walkSync(argument);
         } else {
           allFilePathsInDirectory = [argument];
