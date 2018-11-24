@@ -76,7 +76,7 @@ class Sorter {
     this.config.exclude = configObject.exclude;
     this.config.fileTypes = configObject['file-types'];
     this.config.sortOrder = configObject['sort-order'];
-    if(this.config.logLevel){
+    if (this.config.logLevel) {
       log.setLogLevel(this.config.logLevel);
     }
   }
@@ -252,7 +252,10 @@ class Sorter {
     return filelist;
   }
 
-
+  /**
+   * Returns the version of class-sort
+   * @returns {String} Current version
+   */
   getVersion() {
     const package_json_path = path.join(__dirname, './../package.json');
     const package_json_content = fs.readFileSync(package_json_path, 'utf8');
@@ -261,10 +264,19 @@ class Sorter {
 
   }
 
+  /**
+   * Adds a configuration entry to configuration.
+   * @param key Key to be added
+   * @param value Value to be added
+   */
   addConfiguration(key, value) {
     this.config[key] = value;
   }
 
+  /**
+   * Changes the log level
+   * @param level Level to be set
+   */
   changeLogLevel(level) {
     log.setLogLevel(level);
     this.addConfiguration('logLevel', level);
