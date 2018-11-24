@@ -19,6 +19,9 @@
   "bin": {
     "class-sort": "./src/cli.js"
   },
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "dependencies": {
     "find-up": "^3.0.0",
     "json-try-parse": "^1.0.0",
