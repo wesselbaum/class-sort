@@ -18,7 +18,9 @@ if (argv["v"] || argv["version"]) {
 
 // Add quiet
 
-// Add test
+if (argv["t"] || argv["test"]) {
+  sorter.addConfiguration('test', true)
+}
 
 //Process arguments
 if (argv._ && argv._.length > 0) {

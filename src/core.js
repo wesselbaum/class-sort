@@ -205,7 +205,11 @@ class Sorter {
     if (isTestCase) {
       return sortedContent;
     } else {
-      fs.writeFile(filePath + "_sorted.html", sortedContent, "utf8", function (err) {
+      let writeFilePath = filePath;
+      if (this.config.test === true) {
+        writeFilePath = filePath + "_sorted.html";
+      }
+      fs.writeFile(writeFilePath, sortedContent, "utf8", function (err) {
         if (err) {
           console.log(err);
         }
@@ -242,6 +246,9 @@ class Sorter {
 
   }
 
+  addConfiguration(key, value) {
+    this.config[key] = value;
+  }
 }
 
 module.exports = Sorter;
