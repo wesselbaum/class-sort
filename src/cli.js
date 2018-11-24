@@ -20,7 +20,9 @@ if (argv["verbose"]) {
   sorter.changeLogLevel('verbose');
 }
 
-// Add quiet
+if (argv["q"] || argv["quiet"]) {
+  sorter.changeLogLevel('warning');
+}
 
 if (argv["t"] || argv["test"]) {
   sorter.addConfiguration('test', true);
