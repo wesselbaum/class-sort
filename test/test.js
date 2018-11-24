@@ -6,15 +6,15 @@ const path = require('path');
 const Sorter = require('../src/sorter');
 const testLines = require('../test-data/testline');
 
-describe('Sort', function() {
+describe('Sort', function () {
   const sorter = new Sorter();
 
-  it('Convert single line double quotes', function() {
+  it('Convert single line double quotes', function () {
     const result = sorter.sort(testLines['single-line-double-quotes']);
     expect(result).to.equal(testLines['single-line-double-quotes-result']);
   });
 
-  it('Convert single line single quotes', function() {
+  it('Convert single line single quotes', function () {
     const result = sorter.sort(testLines['single-line-single-quotes']);
     expect(result).to.equal(testLines['single-line-single-quotes-result']);
   });
@@ -35,21 +35,21 @@ describe('Sort', function() {
   });
 });
 
-describe('ProcessContent', function() {
+describe('ProcessContent', function () {
   const sorter = new Sorter();
 
-  it('Convert single line double quotes class', function() {
+  it('Convert single line double quotes class', function () {
     const result = sorter.processContent(testLines['single-line-double-quotes'], '', true);
     expect(result).to.equal(testLines['single-line-double-quotes-result']);
   });
 
-  it('Convert single line single quotes class', function() {
+  it('Convert single line single quotes class', function () {
     const result = sorter.processContent(testLines['single-line-single-quotes'], '', true);
     expect(result).to.equal(testLines['single-line-single-quotes-result']);
   });
 });
 
-describe('ProcessArgument', function() {
+describe('ProcessArgument', function () {
   const sorter = new Sorter();
 
   it('Reading a directory', function () {
@@ -62,5 +62,15 @@ describe('ProcessArgument', function() {
     const testPath = path.join(__dirname, '../test-data/test.html');
     const result = sorter.processArgument(testPath, true);
     expect(result.length).to.equal(1)
+  });
+});
+
+describe('CLI', function () {
+
+  const sorter = new Sorter();
+
+  it('Version', function () {
+    const semanticVersionRegEx = /\d*\.\d*\.\d*/g;
+    expect(sorter.getVersion().match(semanticVersionRegEx).length).to.equal(1)
   });
 });

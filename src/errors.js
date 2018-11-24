@@ -1,5 +1,9 @@
+const Logger = require('./logger');
+const log = new Logger();
+
 let errorHandler = function (errorMessage, exitCode) {
-  process.stderr.write(errorMessage + '\n');
+  //process.stderr.write(errorMessage + '\n');
+  log.logError(errorMessage);
   if (exitCode >= 1) {
     process.exit(exitCode);
   }
@@ -13,6 +17,9 @@ module.exports = {
   },
   readingFileFailed(filePath, err) {
     return `Failed reading File ${filePath}!\nError:\n ${err}`
+  },
+  writingFileFailed(filePath, err) {
+    return `Failed writing File ${filePath}!\nError:\n ${err}`
   },
   noFileOrDirectory(path) {
     return `Argument ${path} isn't a file or directory!`

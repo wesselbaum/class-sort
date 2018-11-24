@@ -15,6 +15,14 @@ In current version no files will be overwritten, but a file with extension '_sor
   `class-sort path/to/directory`
   
   `class-sort path/to/file`
+
+## Flags
+
+  `class-sort -v` `class-sort --version` Returns the current Version of class-sort  
+  `class-sort path/to/directory -t` `class-sort path/to/directory --test` Instead of overwriting the existing files new files with extension _sorted.html will be created.
+  `class-sort path/to/directory -q` `class-sort path/to/directory --quiet` Only necessary output will be written.
+  
+  
   
 ## Tests
 
