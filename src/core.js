@@ -2,6 +2,8 @@
 
 //internal
 const Errors = require("./errors");
+const Logger = require('./logger');
+const log = new Logger();
 
 //External
 const fs = require('fs');
@@ -54,7 +56,9 @@ class Sorter {
         if (ccDefined && dcDefined) {
           const mergedConfig = Object.assign(defaultConfig, customConfig);
           this.processConfig(mergedConfig);
+          log.logVerbose('Custom config could be read');
         } else {
+          log.logInfo('Custom config could not be read');
           this.processConfig(defaultConfig)
         }
       } else if (!dcDefined) {
@@ -72,6 +76,9 @@ class Sorter {
     this.config.exclude = configObject.exclude;
     this.config.fileTypes = configObject['file-types'];
     this.config.sortOrder = configObject['sort-order'];
+    if(this.config.logLevel){
+      log.setLogLevel(this.config.logLevel);
+    }
   }
 
   /**
@@ -126,12 +133,16 @@ class Sorter {
         let filePathsToProcess = [];
 
         if (fs.statSync(argument).isDirectory()) {
+          log.logVerbose(`The argument ${argument} is a directory`);
           allFilePathsInDirectory = this.walkSync(argument);
         } else {
+          log.logVerbose(`The argument ${argument} is a file`);
           allFilePathsInDirectory = [argument];
         }
 
         if (allFilePathsInDirectory.length > 0) {
+          log.logVerbose(`Collecting file paths for further processing...`);
+
           for (let i = 0; i < allFilePathsInDirectory.length; i++) {
             let fileInDirectory = allFilePathsInDirectory[i];
 
@@ -175,6 +186,7 @@ class Sorter {
    * @param filePath
    */
   processFile(filePath) {
+    log.logVerbose(`Processing ${filePath}`);
 
     const self = this;
 
@@ -197,6 +209,7 @@ class Sorter {
    * @returns {String|void} Nothing | Content of the file
    */
   processContent(fileContent, filePath, isTestCase = false) {
+    log.logVerbose(`${filePath} could be read and is processing now`);
 
     const regexFindAllClass = /class=["|'](.|\n)*?["|']/g;
 
@@ -209,9 +222,11 @@ class Sorter {
       if (this.config.test === true) {
         writeFilePath = filePath + "_sorted.html";
       }
+      log.logInfo(`${filePath} read and will be written now to ${writeFilePath}`);
+
       fs.writeFile(writeFilePath, sortedContent, "utf8", function (err) {
         if (err) {
-          console.log(err);
+          Errors.errorHandler(Errors.writingFileFailed(writeFilePath, err));
         }
       });
     }
@@ -248,6 +263,11 @@ class Sorter {
 
   addConfiguration(key, value) {
     this.config[key] = value;
+  }
+
+  changeLogLevel(level) {
+    log.setLogLevel(level);
+    this.addConfiguration('logLevel', level);
   }
 }
 
