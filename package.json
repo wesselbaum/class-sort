@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "find-up": "^3.0.0",
-    "glob": "^7.1.3",
     "globby": "^8.0.1",
     "json-try-parse": "^1.0.0",
     "natural-sort": "^1.0.0",
