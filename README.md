@@ -24,7 +24,19 @@ In current version no files will be overwritten, but a file with extension '_sor
 
   `class-sort path/to/directory -q` `class-sort path/to/directory --quiet` Only necessary output will be written.
   
-  
+## Configuration file
+
+A configuration file can be placed somewhere up the tree named class-sort.json. Following configurations can be done:
+
+*  log-level [String]
+   * verbose
+   * info
+   * warning
+   * error
+   
+*  exclude [String Array] Paths in glob syntax to be excluded
+* file-types [String Array] File extensions to be parsed
+* sort-order [String Array] Regular Expression for ordering the classes. First occurrence will be matched only.
   
 ## Tests
 
