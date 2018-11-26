@@ -4,8 +4,6 @@ class-sort
 
 This project is meant to sort class attributes in a html file for better readability.
  
-In current version no files will be overwritten, but a file with extension '_sorted.html' will be put next to the original one. In next versions this will be changed, when I can confirm the functionality the way this tool is meant to deliver.
-
 ## Installation
 
   `npm install -g class-sort`

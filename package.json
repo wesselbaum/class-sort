@@ -1,6 +1,6 @@
 {
   "name": "class-sort",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Sorts the class attirbute in a html file",
   "main": "./src/sorter.js",
   "scripts": {
