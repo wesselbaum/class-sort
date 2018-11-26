@@ -33,6 +33,22 @@ describe('Sort', function () {
     const result = sorter.sort(testLines['multi-line-double-quotes']);
     expect(result).to.equal(testLines['single-line-double-quotes-result']);
   });
+
+  it('Sort according to sort-order', function () {
+    sorter.addConfiguration('sort-order', [
+          "c-.*",
+          "row",
+          "column.*",
+          "small.*",
+          "medium.*",
+          "large.*"
+        ]
+    );
+    const classes = testLines['ordered-by-sort-order'];
+    console.log(classes);
+    const result = sorter.sort(classes);
+    expect(result).to.equal(testLines['ordered-by-sort-order-result']);
+  });
 });
 
 describe('ProcessContent', function () {

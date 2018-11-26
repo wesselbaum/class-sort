@@ -10,12 +10,19 @@ const fs = require('fs');
 const path = require('path');
 const findUp = require('find-up');
 const jsonTryParse = require('json-try-parse');
+const naturalSort = require('natural-sort');
 
 class Sorter {
 
   constructor() {
     this.config = {};
     this.readConfig();
+
+    //let arrA = ["columns", "custom-class", "row", "large-12", "large-5", "medium-12", "column", "c-item", "c-item--red", "c-item__headline", "c-item__headline--uppercase", "7", "8"];
+    //let arrB = ["c-.*", "row", "columns", "column.*", "small.*", "medium.*", "large.*"];
+    //
+    // let sorted = this.sortArrayByArray(arrA, arrB);
+    // console.log(sorted);
   }
 
   /**
@@ -90,9 +97,10 @@ class Sorter {
    * Sorts the class array.
    * Joins the sorted array and reconstructs the class tag.
    * @param unsortedString String which contains class="..."
+   * @param self String context
    * @returns {string} sorted class
    */
-  sort(unsortedString) {
+  sort(unsortedString, self = this) {
     const doubleSpaces = /\s\s+/g;
     let classesString = unsortedString.replace('class=', '');
     classesString = (classesString.replace(doubleSpaces, ' '));
@@ -100,8 +108,9 @@ class Sorter {
     const regex = new RegExp(quotes, 'g');
     classesString = classesString.replace(regex, '');
     let classesArray = classesString.split(' ');
-    classesArray = classesArray.sort();
+    // classesArray = classesArray.sort();
 
+    classesArray = Sorter.sortArrayByArray(classesArray, self.config.sortOrder);
     const sortedClasses = classesArray.join(' ').trim();
 
     return "class=" + quotes + sortedClasses + quotes;
@@ -213,7 +222,12 @@ class Sorter {
 
     const regexFindAllClass = /class=["|'](.|\n)*?["|']/g;
 
-    let sortedContent = fileContent.replace(regexFindAllClass, this.sort);
+    // let sortedContent = fileContent.replace(regexFindAllClass, this.sort(m, p1, p2));
+
+    const self = this;
+    let sortedContent = fileContent.replace(regexFindAllClass, function (match) {
+      return self.sort(match, self);
+    });
 
     if (isTestCase) {
       return sortedContent;
@@ -261,7 +275,6 @@ class Sorter {
     const package_json_content = fs.readFileSync(package_json_path, 'utf8');
     const package_json_object = JSON.parse(package_json_content);
     return package_json_object["version"];
-
   }
 
   /**
@@ -280,6 +293,38 @@ class Sorter {
   changeLogLevel(level) {
     log.setLogLevel(level);
     this.addConfiguration('logLevel', level);
+  }
+
+
+  static sortArrayByArray(unsortedArray, sortArray) {
+    let leftOver = unsortedArray.sort(naturalSort());
+    let sortedArray = [];
+
+    for (let i = 0; i < sortArray.length; i++) {
+      let sortElement = sortArray[i] + '$';
+      let regex = new RegExp(sortElement, '');
+      let currentSortElementMatches = [];
+
+      for (let i = 0; i < leftOver.length; i++) {
+        let unsortedElement = leftOver[i];
+        if (regex.test(unsortedElement)) {
+          currentSortElementMatches.push(unsortedElement);
+          sortedArray.push(unsortedElement);
+
+
+        }
+      }
+
+      for (let i = 0; i < currentSortElementMatches.length; i++) {
+        const index = unsortedArray.indexOf(currentSortElementMatches[i]);
+        if (index !== -1) {
+          unsortedArray.splice(index, 1);
+        }
+      }
+
+    }
+
+    return sortedArray.concat(leftOver);
   }
 }
 
