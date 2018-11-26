@@ -28,8 +28,6 @@ class Sorter {
    * If there is no custom config only the default config will be processed.
    */
   readConfig() {
-    // Add parameter for passing own config path
-
     const defaultConfigRelativePath = '../config/class-sort.json';
     const defaultConfigPath = path.resolve(__dirname, defaultConfigRelativePath);
     const defaultConfigContent = fs.readFileSync(defaultConfigPath, 'utf8');
@@ -103,8 +101,6 @@ class Sorter {
     const regex = new RegExp(quotes, 'g');
     classesString = classesString.replace(regex, '');
     let classesArray = classesString.split(' ');
-    // classesArray = classesArray.sort();
-
     classesArray = Sorter.sortArrayByArray(classesArray, self.config.sortOrder);
     const sortedClasses = classesArray.join(' ').trim();
 
