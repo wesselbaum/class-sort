@@ -2,8 +2,8 @@
 'use strict';
 
 //Internal
-const Sorter = require("./sorter");
-const Errors = require("./errors");
+const Sorter = require('./sorter');
+const Errors = require('./errors');
 
 //External
 const argv = require('yargs').argv;
@@ -11,20 +11,20 @@ const argv = require('yargs').argv;
 const argumentsRequired = true;
 const sorter = new Sorter();
 
-if (argv["v"] || argv["version"]) {
+if (argv['v'] || argv['version']) {
   console.log(sorter.getVersion());
   this.argumentsRequired = false;
 }
 
-if (argv["verbose"]) {
+if (argv['verbose']) {
   sorter.changeLogLevel('verbose');
 }
 
-if (argv["q"] || argv["quiet"]) {
+if (argv['q'] || argv['quiet']) {
   sorter.changeLogLevel('warning');
 }
 
-if (argv["t"] || argv["test"]) {
+if (argv['t'] || argv['test']) {
   sorter.addConfiguration('test', true);
 }
 

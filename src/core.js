@@ -1,7 +1,7 @@
 'use strict';
 
 //internal
-const Errors = require("./errors");
+const Errors = require('./errors');
 const Logger = require('./logger');
 const log = new Logger();
 
@@ -18,12 +18,6 @@ class Sorter {
   constructor() {
     this.config = {};
     this.readConfig();
-
-    //let arrA = ["columns", "custom-class", "row", "large-12", "large-5", "medium-12", "column", "c-item", "c-item--red", "c-item__headline", "c-item__headline--uppercase", "7", "8"];
-    //let arrB = ["c-.*", "row", "columns", "column.*", "small.*", "medium.*", "large.*"];
-    //
-    // let sorted = this.sortArrayByArray(arrA, arrB);
-    // console.log(sorted);
   }
 
   /**
@@ -97,7 +91,7 @@ class Sorter {
    * Makes the string to an array separated by spaces.
    * Sorts the class array.
    * Joins the sorted array and reconstructs the class tag.
-   * @param unsortedString String which contains class="..."
+   * @param unsortedString String which contains class='...'
    * @param self String context
    * @returns {string} sorted class
    */
@@ -114,7 +108,7 @@ class Sorter {
     classesArray = Sorter.sortArrayByArray(classesArray, self.config.sortOrder);
     const sortedClasses = classesArray.join(' ').trim();
 
-    return "class=" + quotes + sortedClasses + quotes;
+    return 'class=' + quotes + sortedClasses + quotes;
   }
 
   /**
@@ -137,7 +131,7 @@ class Sorter {
    * @returns {Array}
    */
   processArgument(argument, isTestCase = false) {
-    if (typeof argument === "string") {
+    if (typeof argument === 'string') {
       if (fs.existsSync(argument)) {
         let allFilePathsInDirectory;
         let filePathsToProcess = [];
@@ -183,7 +177,7 @@ class Sorter {
         Errors.errorHandler(Errors.noFileOrDirectory(argument), 1);
       }
     } else {
-      console.log("Unable to process " + argument);
+      log.logError(`Unable to process ${argument}`);
     }
   }
 
@@ -243,11 +237,11 @@ class Sorter {
     } else {
       let writeFilePath = filePath;
       if (this.config.test === true) {
-        writeFilePath = filePath + "_sorted.html";
+        writeFilePath = filePath + '_sorted.html';
       }
       log.logInfo(`${filePath} read and will be written now to ${writeFilePath}`);
 
-      fs.writeFile(writeFilePath, sortedContent, "utf8", function (err) {
+      fs.writeFile(writeFilePath, sortedContent, 'utf8', function (err) {
         if (err) {
           Errors.errorHandler(Errors.writingFileFailed(writeFilePath, err));
         }
@@ -283,7 +277,7 @@ class Sorter {
     const package_json_path = path.join(__dirname, './../package.json');
     const package_json_content = fs.readFileSync(package_json_path, 'utf8');
     const package_json_object = JSON.parse(package_json_content);
-    return package_json_object["version"];
+    return package_json_object['version'];
   }
 
   /**

@@ -3,10 +3,10 @@ class Logger {
   constructor() {
     this.logLevel = 'info';
     this.availableLogLevels = [
-      "verbose",
-      "info",
-      "warning",
-      "error",
+      'verbose',
+      'info',
+      'warning',
+      'error',
     ]
   }
 

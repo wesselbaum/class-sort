@@ -1,11 +1,9 @@
 'use strict';
 
-let Sorter = require("./core");
+let Sorter = require('./core');
 
 let ClassSorter = function () {
-  let sorter = new Sorter();
-
-  return sorter;
+  return new Sorter();
 };
 
 
