@@ -11,6 +11,7 @@ const path = require('path');
 const findUp = require('find-up');
 const jsonTryParse = require('json-try-parse');
 const naturalSort = require('natural-sort');
+const globby = require('globby');
 
 class Sorter {
 
@@ -143,7 +144,15 @@ class Sorter {
 
         if (fs.statSync(argument).isDirectory()) {
           log.logVerbose(`The argument ${argument} is a directory`);
-          allFilePathsInDirectory = this.walkSync(argument);
+          const options = {
+            cwd: argument,
+            ignore: this.config.exclude,
+            absolute: true,
+            deep: true
+          };
+
+          allFilePathsInDirectory = globby.sync('**', options);
+
         } else {
           log.logVerbose(`The argument ${argument} is a file`);
           allFilePathsInDirectory = [argument];
