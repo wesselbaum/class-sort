@@ -1,8 +1,8 @@
+//Internal
 const Logger = require('./logger');
 const log = new Logger();
 
 let errorHandler = function (errorMessage, exitCode) {
-  //process.stderr.write(errorMessage + '\n');
   log.logError(errorMessage);
   if (exitCode >= 1) {
     process.exit(exitCode);
