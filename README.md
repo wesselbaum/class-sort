@@ -2,7 +2,9 @@ class-sort
 =========
 [![Build Status](https://travis-ci.com/wesselbaum/class-sort.svg?branch=master)](https://travis-ci.com/wesselbaum/class-sort)
 
-This project is meant to sort class attributes in a html file for better readability.
+Class-sort is a tool which gives you the power to make sure your html class attribute is always good readable. 
+
+The class attribute will be sorted alphabetically. If you want you also can provide a custom configuration to make the sort order yours.
  
 ## Installation
 
@@ -13,6 +15,10 @@ This project is meant to sort class attributes in a html file for better readabi
   `class-sort path/to/directory`
   
   `class-sort path/to/file`
+### Test-case
+  `<div class="class1 c-wrapper class2 c-wrapper--modifier class5 c-wrapper--different-modifier class3 class6">` 
+### Result
+  `<div class="c-wrapper c-wrapper--different-modifier c-wrapper--modifier class1 class2 class3 class5 class6">` 
 
 ## Flags
 
