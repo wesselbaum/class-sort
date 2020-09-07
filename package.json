@@ -23,14 +23,14 @@
     "node": ">=6.0.0"
   },
   "dependencies": {
-    "find-up": "^4.1.0",
-    "globby": "^10.0.1",
+    "find-up": "^5.0.0",
+    "globby": "^11.0.1",
     "json-try-parse": "^1.0.0",
     "natural-sort": "^1.0.0",
-    "yargs": "^14.2.0"
+    "yargs": "^15.4.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.1"
+    "mocha": "^8.1.3"
   }
 }
